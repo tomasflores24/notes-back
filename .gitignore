@@ -37,3 +37,6 @@ lerna-debug.log*
 
 # Db 
 pg_data
+
+# Enviroment
+.env
