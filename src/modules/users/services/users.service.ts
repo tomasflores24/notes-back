@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserEntity } from '../entities/user.entity';
-import { ErrorManager } from 'src/utils/error.manager';
+import { ErrorManager } from '../../../utils/error.manager';
 
 @Injectable()
 export class UsersService {
