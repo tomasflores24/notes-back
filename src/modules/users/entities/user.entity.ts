@@ -1,17 +1,10 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { StatusEntity } from '../../status/entitities/status.entity';
+import { IUser } from '../../../interfaces/user.interface';
+import { BaseEntity } from '../../../base-entities/base.entity';
 
 @Entity({ name: 'users' })
-export class UserEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
-
+export class UserEntity extends BaseEntity implements IUser {
   @Column()
   name!: string;
 
