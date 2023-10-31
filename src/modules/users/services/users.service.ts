@@ -55,6 +55,7 @@ export class UsersService {
     try {
       const user = await this.userRepository
         .createQueryBuilder('user')
+        .select(['user.id', 'user.name', 'user.email', 'user.password'])
         .where('id = :userId', { userId })
         .andWhere('user.status = :userStatus', { userStatus: ACTIVE_ID })
         .getOne();
@@ -78,7 +79,7 @@ export class UsersService {
         .update()
         .set(updateUserDto)
         .where('id = :userId', { userId })
-        .andWhere('user.status = :userStatus', { userStatus: ACTIVE_ID })
+        .andWhere('status = :userStatus', { userStatus: ACTIVE_ID })
         .execute();
 
       if (user.affected === 0) {
