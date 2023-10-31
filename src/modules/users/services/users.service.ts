@@ -5,6 +5,10 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserEntity } from '../entities/user.entity';
 import { ErrorManager } from '../../../utils/error.manager';
+import {
+  ACTIVE_ID,
+  INACTIVE_ID,
+} from '../../../common/constants/status.constant';
 
 @Injectable()
 export class UsersService {
@@ -15,7 +19,10 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     try {
-      const user = this.userRepository.create(createUserDto);
+      const user = this.userRepository.create({
+        ...createUserDto,
+        status: { id: createUserDto.status },
+      });
       const userCreated = await this.userRepository.save(user);
       return userCreated;
     } catch (error) {
@@ -26,7 +33,10 @@ export class UsersService {
   async findAll() {
     try {
       const users = await this.userRepository
-        .createQueryBuilder('users')
+        .createQueryBuilder('user')
+        .select(['user.id', 'user.name', 'user.email'])
+        .leftJoin('user.status', 'status', 'status.id = user.status')
+        .where('user.status = :userStatus', { userStatus: ACTIVE_ID })
         .getMany();
 
       if (!users.length) {
@@ -45,7 +55,9 @@ export class UsersService {
     try {
       const user = await this.userRepository
         .createQueryBuilder('user')
+        .select(['user.id', 'user.name', 'user.email', 'user.password'])
         .where('id = :userId', { userId })
+        .andWhere('user.status = :userStatus', { userStatus: ACTIVE_ID })
         .getOne();
 
       if (!user) {
@@ -67,6 +79,7 @@ export class UsersService {
         .update()
         .set(updateUserDto)
         .where('id = :userId', { userId })
+        .andWhere('status = :userStatus', { userStatus: ACTIVE_ID })
         .execute();
 
       if (user.affected === 0) {
@@ -82,9 +95,24 @@ export class UsersService {
     }
   }
 
-  remove(userId: string) {
+  async remove(userId: string) {
     try {
-      return `This action removes a #${userId} user`;
+      const user = await this.userRepository
+        .createQueryBuilder()
+        .update()
+        .set({ status: { id: INACTIVE_ID } })
+        .where('id = :userId', { userId })
+        .andWhere('status = :userStatus', { userStatus: ACTIVE_ID })
+        .execute();
+
+      if (user.affected === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'Could not be deleted',
+        });
+      }
+
+      return user;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
