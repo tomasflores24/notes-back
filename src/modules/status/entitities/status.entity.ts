@@ -1,8 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { STATUS } from '../../../common/enums/status.enum';
 import { UserEntity } from '../../users/entities/user.entity';
-import { IEntity } from 'src/common/interfaces/entity.interface';
-import { NoteEntity } from 'src/modules/notes/entities/note.entity';
+import { IEntity } from '../../../common/interfaces/entity.interface';
+import { NoteEntity } from '../../../modules/notes/entities/note.entity';
 
 @Entity({ name: 'status' })
 export class StatusEntity implements IEntity {
