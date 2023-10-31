@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { StatusEntity } from '../../status/entitities/status.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -13,4 +20,8 @@ export class UserEntity {
 
   @Column()
   password!: string;
+
+  @ManyToOne(() => StatusEntity, (status) => status.users, {})
+  @JoinColumn({ name: 'status' })
+  status!: StatusEntity;
 }
