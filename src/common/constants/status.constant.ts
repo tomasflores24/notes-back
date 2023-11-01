@@ -1,3 +1,5 @@
-export const ACTIVE_ID = 2;
-export const INACTIVE_ID = 3;
-export const ARCHIVED_ID = 4;
+export enum statusId {
+  ACTIVE = 2,
+  INACTIVE = 3,
+  ARCHIVED = 4,
+}
