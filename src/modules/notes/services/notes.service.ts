@@ -5,10 +5,7 @@ import { CreateNoteDto } from '../dto/create-note.dto';
 import { UpdateNoteDto } from '../dto/update-note.dto';
 import { ErrorManager } from '../../../utils/error.manager';
 import { NoteEntity } from '../entities/note.entity';
-import {
-  ACTIVE_ID,
-  INACTIVE_ID,
-} from '../../../common/constants/status.constant';
+import { statusId } from 'src/common/constants/status.constant';
 
 @Injectable()
 export class NotesService {
@@ -36,7 +33,7 @@ export class NotesService {
       const notes = await this.noteRepository
         .createQueryBuilder('note')
         .select(['note.id', 'note.title', 'note.content'])
-        .where('note.status = :noteStatus', { noteStatus: ACTIVE_ID })
+        .where('note.status = :noteStatus', { noteStatus: statusId.ACTIVE })
         .getMany();
 
       if (notes.length === 0) {
@@ -59,8 +56,8 @@ export class NotesService {
         .select(['note.id', 'note.title', 'note.content'])
         .addSelect(['user.id', 'user.name'])
         .where('note.id = :id', { id: noteId })
-        .andWhere('note.status = :noteStatus', { noteStatus: ACTIVE_ID })
-        .andWhere('user.status = :userStatus', { userStatus: ACTIVE_ID })
+        .andWhere('note.status = :noteStatus', { noteStatus: statusId.ACTIVE })
+        .andWhere('user.status = :userStatus', { userStatus: statusId.ACTIVE })
         .getOne();
 
       if (!note) {
@@ -82,7 +79,7 @@ export class NotesService {
         .update()
         .set(updateNoteDto)
         .where('id = :noteId', { noteId })
-        .andWhere('status = :noteStatus', { noteStatus: ACTIVE_ID })
+        .andWhere('status = :noteStatus', { noteStatus: statusId.ACTIVE })
         .execute();
 
       if (note.affected === 0) {
@@ -102,9 +99,9 @@ export class NotesService {
       const note = await this.noteRepository
         .createQueryBuilder()
         .update()
-        .set({ status: { id: INACTIVE_ID } })
+        .set({ status: { id: statusId.INACTIVE } })
         .where('id = :noteId', { noteId })
-        .andWhere('status = :noteStatus', { noteStatus: ACTIVE_ID })
+        .andWhere('status = :noteStatus', { noteStatus: statusId.ACTIVE })
         .execute();
 
       if (note.affected === 0) {
