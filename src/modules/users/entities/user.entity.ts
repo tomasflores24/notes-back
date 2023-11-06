@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { StatusEntity } from '../../status/entitities/status.entity';
-import { IUser } from '../../../common/interfaces/user.interface';
+import { IUser } from '../../../common/interfaces';
 import { BaseEntity } from '../../../common/base-entities/base.entity';
 import { NoteEntity } from '../../../modules/notes/entities/note.entity';
 
