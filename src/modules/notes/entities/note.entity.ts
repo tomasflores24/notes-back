@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { INote } from '../../../common/interfaces/note.interface';
+import { INote } from '../../../common/interfaces';
 import { BaseEntity } from '../../../common/base-entities/base.entity';
 import { StatusEntity } from '../../../modules/status/entitities/status.entity';
 import { UserEntity } from '../../../modules/users/entities/user.entity';

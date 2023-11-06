@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { STATUS } from '../../../common/enums/status.enum';
 import { UserEntity } from '../../users/entities/user.entity';
-import { IEntity } from '../../../common/interfaces/entity.interface';
+import { IEntity } from '../../../common/interfaces';
 import { NoteEntity } from '../../../modules/notes/entities/note.entity';
 
 @Entity({ name: 'status' })
