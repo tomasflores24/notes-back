@@ -1,6 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import * as argon2 from 'argon2';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserEntity } from '../entities/user.entity';
@@ -17,10 +18,16 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     try {
+      createUserDto.password = await argon2.hash(createUserDto.password, {
+        secret: Buffer.from(process.env.HASH),
+      });
+
       const user = this.userRepository.create({
         ...createUserDto,
-        status: { id: createUserDto.status },
+        status: { id: statusId.ACTIVE },
+        role: { id: roleId.BASIC },
       });
+
       const userCreated = await this.userRepository.save(user);
       return userCreated;
     } catch (error) {
@@ -37,7 +44,7 @@ export class UsersService {
           noteStatus: statusId.ACTIVE,
         })
         .where('u.status = :userStatus', { userStatus: statusId.ACTIVE })
-        .andWhere('u.roles = :userRole', { userRole: roleId.BASIC })
+        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .getMany();
 
       if (!users.length) {
@@ -62,8 +69,7 @@ export class UsersService {
         })
         .where('u.id = :userId', { userId })
         .andWhere('u.status = :userStatus', { userStatus: statusId.ACTIVE })
-        .andWhere('u.roles = :userRole', { userRole: roleId.BASIC })
-
+        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .getOne();
 
       if (!user) {
@@ -78,6 +84,27 @@ export class UsersService {
     }
   }
 
+  async findBy(email: string, password: string) {
+    try {
+      const user = await this.userRepository
+        .createQueryBuilder('u')
+        .where('u.email = :userEmail', { userEmail: email })
+        .andWhere('u.status = :userStatus', { userStatus: statusId.ACTIVE })
+        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
+        .getOne();
+
+      if (user) {
+        const match = await argon2.verify(user.password, password, {
+          secret: Buffer.from(process.env.HASH),
+        });
+        if (match) return user;
+      }
+      return null;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
   async update(userId: string, updateUserDto: UpdateUserDto) {
     try {
       const user = await this.userRepository
@@ -86,7 +113,7 @@ export class UsersService {
         .set(updateUserDto)
         .where('id = :userId', { userId })
         .andWhere('status = :userStatus', { userStatus: statusId.ACTIVE })
-        .andWhere('u.roles = :userRole', { userRole: roleId.BASIC })
+        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .execute();
 
       if (user.affected === 0) {
@@ -110,7 +137,7 @@ export class UsersService {
         .set({ status: { id: statusId.INACTIVE } })
         .where('id = :userId', { userId })
         .andWhere('status = :userStatus', { userStatus: statusId.ACTIVE })
-        .andWhere('u.roles = :userRole', { userRole: roleId.BASIC })
+        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .execute();
 
       if (user.affected === 0) {
