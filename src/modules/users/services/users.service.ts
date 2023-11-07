@@ -6,6 +6,7 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserEntity } from '../entities/user.entity';
 import { ErrorManager } from '../../../utils/error.manager';
 import { statusId } from 'src/common/constants/status.constant';
+import { roleId } from 'src/common/constants/roles.constant';
 
 @Injectable()
 export class UsersService {
@@ -36,6 +37,7 @@ export class UsersService {
           noteStatus: statusId.ACTIVE,
         })
         .where('u.status = :userStatus', { userStatus: statusId.ACTIVE })
+        .andWhere('u.roles = :userRole', { userRole: roleId.BASIC })
         .getMany();
 
       if (!users.length) {
@@ -60,6 +62,8 @@ export class UsersService {
         })
         .where('u.id = :userId', { userId })
         .andWhere('u.status = :userStatus', { userStatus: statusId.ACTIVE })
+        .andWhere('u.roles = :userRole', { userRole: roleId.BASIC })
+
         .getOne();
 
       if (!user) {
@@ -82,6 +86,7 @@ export class UsersService {
         .set(updateUserDto)
         .where('id = :userId', { userId })
         .andWhere('status = :userStatus', { userStatus: statusId.ACTIVE })
+        .andWhere('u.roles = :userRole', { userRole: roleId.BASIC })
         .execute();
 
       if (user.affected === 0) {
@@ -105,6 +110,7 @@ export class UsersService {
         .set({ status: { id: statusId.INACTIVE } })
         .where('id = :userId', { userId })
         .andWhere('status = :userStatus', { userStatus: statusId.ACTIVE })
+        .andWhere('u.roles = :userRole', { userRole: roleId.BASIC })
         .execute();
 
       if (user.affected === 0) {
