@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class CreateNoteDto {
   @IsNotEmpty()
@@ -8,10 +8,6 @@ export class CreateNoteDto {
   @IsNotEmpty()
   @IsString()
   readonly content!: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  status!: number;
 
   @IsUUID('4')
   @IsNotEmpty()

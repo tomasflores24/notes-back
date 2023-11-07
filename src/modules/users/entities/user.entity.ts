@@ -24,6 +24,6 @@ export class UserEntity extends BaseEntity implements IUser {
   notes!: NoteEntity[];
 
   @ManyToOne(() => RoleEntity, (role) => role.users)
-  @JoinColumn({ name: 'roles' })
+  @JoinColumn({ name: 'role' })
   role!: RoleEntity;
 }
