@@ -19,7 +19,7 @@ export class NotesService {
       const note = this.noteRepository.create({
         ...createNoteDto,
         user: { id: createNoteDto.user },
-        status: { id: createNoteDto.status },
+        status: { id: statusId.ACTIVE },
       });
       const noteCreated = await this.noteRepository.save(note);
       return noteCreated;
