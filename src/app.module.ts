@@ -5,8 +5,13 @@ import { UsersModule } from './modules/users/users.module';
 import { StatusModule } from './modules/status/status.module';
 import { NotesModule } from './modules/notes/notes.module';
 import { RolesModule } from './modules/roles/roles.module';
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: `.env`,
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot(DataSourceConfig),
     UsersModule,
     StatusModule,
