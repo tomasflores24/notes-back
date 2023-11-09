@@ -1,4 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { StatusEntity } from '../../status/entitities/status.entity';
 import { IUser } from '../../../common/interfaces';
 import { BaseEntity } from '../../../common/base-entities/base.entity';
@@ -13,6 +14,7 @@ export class UserEntity extends BaseEntity implements IUser {
   @Column({ unique: true })
   email!: string;
 
+  @Exclude()
   @Column()
   password!: string;
 
