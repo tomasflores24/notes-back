@@ -67,9 +67,10 @@ export class UsersService {
         .leftJoin('u.notes', 'n', 'n.status = :noteStatus', {
           noteStatus: statusId.ACTIVE,
         })
+        .leftJoin('u.role', 'r')
+        .addSelect('r.name')
         .where('u.id = :userId', { userId })
         .andWhere('u.status = :userStatus', { userStatus: statusId.ACTIVE })
-        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .getOne();
 
       if (!user) {
@@ -84,7 +85,7 @@ export class UsersService {
     }
   }
 
-  async findBy(email: string, password: string) {
+  async findBy(email: string) {
     try {
       const user = await this.userRepository
         .createQueryBuilder('u')
@@ -93,13 +94,7 @@ export class UsersService {
         .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .getOne();
 
-      if (user) {
-        const match = await argon2.verify(user.password, password, {
-          secret: Buffer.from(process.env.HASH),
-        });
-        if (match) return user;
-      }
-      return null;
+      return user;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
