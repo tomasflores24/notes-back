@@ -44,7 +44,6 @@ export class UsersService {
           noteStatus: statusId.ACTIVE,
         })
         .where('u.status = :userStatus', { userStatus: statusId.ACTIVE })
-        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .getMany();
 
       if (!users.length) {
@@ -91,7 +90,6 @@ export class UsersService {
         .createQueryBuilder('u')
         .where('u.email = :userEmail', { userEmail: email })
         .andWhere('u.status = :userStatus', { userStatus: statusId.ACTIVE })
-        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .getOne();
 
       return user;
@@ -108,7 +106,6 @@ export class UsersService {
         .set(updateUserDto)
         .where('id = :userId', { userId })
         .andWhere('status = :userStatus', { userStatus: statusId.ACTIVE })
-        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .execute();
 
       if (user.affected === 0) {
@@ -132,7 +129,6 @@ export class UsersService {
         .set({ status: { id: statusId.INACTIVE } })
         .where('id = :userId', { userId })
         .andWhere('status = :userStatus', { userStatus: statusId.ACTIVE })
-        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .execute();
 
       if (user.affected === 0) {
