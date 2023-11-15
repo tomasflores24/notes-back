@@ -44,7 +44,6 @@ export class UsersService {
           noteStatus: statusId.ACTIVE,
         })
         .where('u.status = :userStatus', { userStatus: statusId.ACTIVE })
-        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .getMany();
 
       if (!users.length) {
@@ -67,9 +66,10 @@ export class UsersService {
         .leftJoin('u.notes', 'n', 'n.status = :noteStatus', {
           noteStatus: statusId.ACTIVE,
         })
+        .leftJoin('u.role', 'r')
+        .addSelect('r.name')
         .where('u.id = :userId', { userId })
         .andWhere('u.status = :userStatus', { userStatus: statusId.ACTIVE })
-        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .getOne();
 
       if (!user) {
@@ -84,22 +84,15 @@ export class UsersService {
     }
   }
 
-  async findBy(email: string, password: string) {
+  async findBy(email: string) {
     try {
       const user = await this.userRepository
         .createQueryBuilder('u')
         .where('u.email = :userEmail', { userEmail: email })
         .andWhere('u.status = :userStatus', { userStatus: statusId.ACTIVE })
-        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .getOne();
 
-      if (user) {
-        const match = await argon2.verify(user.password, password, {
-          secret: Buffer.from(process.env.HASH),
-        });
-        if (match) return user;
-      }
-      return null;
+      return user;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
@@ -113,7 +106,6 @@ export class UsersService {
         .set(updateUserDto)
         .where('id = :userId', { userId })
         .andWhere('status = :userStatus', { userStatus: statusId.ACTIVE })
-        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .execute();
 
       if (user.affected === 0) {
@@ -137,7 +129,6 @@ export class UsersService {
         .set({ status: { id: statusId.INACTIVE } })
         .where('id = :userId', { userId })
         .andWhere('status = :userStatus', { userStatus: statusId.ACTIVE })
-        .andWhere('u.role = :userRole', { userRole: roleId.BASIC })
         .execute();
 
       if (user.affected === 0) {
