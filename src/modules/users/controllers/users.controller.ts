@@ -14,24 +14,25 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
 import { PublicAccess } from 'src/modules/decorators/public.decorator';
 import { AdminAccess } from 'src/modules/decorators/admin.decorator';
+import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
 
 @Controller('users')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @Post()
+  @PublicAccess()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  @PublicAccess()
+  @AdminAccess()
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  @AdminAccess()
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
@@ -42,6 +43,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @AdminAccess()
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
