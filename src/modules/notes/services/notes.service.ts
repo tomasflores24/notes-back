@@ -1,14 +1,14 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { CreateNoteDto } from '../dto/create-note.dto';
-import { UpdateNoteDto } from '../dto/update-note.dto';
 import { ErrorManager } from '../../../utils/error.manager';
 import { NoteEntity } from '../entities/note.entity';
 import { statusId } from 'src/common/constants/status.constant';
+import { INoteService } from '../interfaces/notes.interface';
+import { CreateNoteDto, UpdateNoteDto } from '../dto';
 
 @Injectable()
-export class NotesService {
+export class NotesService implements INoteService {
   constructor(
     @InjectRepository(NoteEntity)
     private readonly noteRepository: Repository<NoteEntity>,

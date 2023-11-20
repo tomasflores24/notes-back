@@ -2,15 +2,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import * as argon2 from 'argon2';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserEntity } from '../entities/user.entity';
 import { ErrorManager } from '../../../utils/error.manager';
 import { statusId } from 'src/common/constants/status.constant';
 import { roleId } from 'src/common/constants/roles.constant';
+import { IUserService } from '../interfaces/user.interface';
+import { CreateUserDto, UpdateUserDto } from '../dto';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements IUserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
