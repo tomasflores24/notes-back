@@ -6,11 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { NotesService } from '../services/notes.service';
 import { CreateNoteDto, UpdateNoteDto } from '../dto';
+import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
+import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
+import { AdminAccess } from 'src/modules/decorators/admin.decorator';
 
 @Controller('notes')
+@UseGuards(AuthGuard, RolesGuard)
 export class NotesController {
   constructor(private readonly notesService: NotesService) {}
 
@@ -20,6 +25,7 @@ export class NotesController {
   }
 
   @Get()
+  @AdminAccess()
   findAll() {
     return this.notesService.findAll();
   }
