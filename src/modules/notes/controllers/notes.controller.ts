@@ -1,0 +1,47 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
+import { NotesService } from '../services/notes.service';
+import { CreateNoteDto, UpdateNoteDto } from '../dto';
+import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
+import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
+import { AdminAccess } from 'src/modules/decorators/admin.decorator';
+
+@Controller('notes')
+@UseGuards(AuthGuard, RolesGuard)
+export class NotesController {
+  constructor(private readonly notesService: NotesService) {}
+
+  @Post()
+  create(@Body() createNoteDto: CreateNoteDto) {
+    return this.notesService.create(createNoteDto);
+  }
+
+  @Get()
+  @AdminAccess()
+  findAll() {
+    return this.notesService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.notesService.findOne(id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto) {
+    return this.notesService.update(id, updateNoteDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.notesService.remove(id);
+  }
+}
