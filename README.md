@@ -16,4 +16,4 @@ Este proyecto es una Todo-List, en la cual un usuario para crear notas debera in
 
 
 ## Esquema
-![db](https://res.cloudinary.com/df76rzfse/image/upload/v1700009466/Tomas/Schema-db_miyq7b.png)
+![db](https://res.cloudinary.com/df76rzfse/image/upload/v1700680510/Tomas/schema-db_frpvfe.png)
