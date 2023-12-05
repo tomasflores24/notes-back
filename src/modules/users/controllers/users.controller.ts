@@ -22,28 +22,33 @@ export class UsersController {
   @Post()
   @PublicAccess()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    const message = this.usersService.create(createUserDto);
+    return { message };
   }
 
   @Get()
   @AdminAccess()
   findAll() {
-    return this.usersService.findAll();
+    const users = this.usersService.findAll();
+    return { users };
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+    const user = this.usersService.findOne(id);
+    return { user };
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+    const message = this.usersService.update(id, updateUserDto);
+    return { message };
   }
 
   @Delete(':id')
   @AdminAccess()
   remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+    const message = this.usersService.remove(id);
+    return { message };
   }
 }

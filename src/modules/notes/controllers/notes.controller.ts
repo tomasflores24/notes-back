@@ -21,27 +21,32 @@ export class NotesController {
 
   @Post()
   create(@Body() createNoteDto: CreateNoteDto) {
-    return this.notesService.create(createNoteDto);
+    const message = this.notesService.create(createNoteDto);
+    return { message };
   }
 
   @Get()
   @AdminAccess()
   findAll() {
-    return this.notesService.findAll();
+    const notes = this.notesService.findAll();
+    return { notes };
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.notesService.findOne(id);
+    const note = this.notesService.findOne(id);
+    return { note };
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto) {
-    return this.notesService.update(id, updateNoteDto);
+    const message = this.notesService.update(id, updateNoteDto);
+    return { message };
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.notesService.remove(id);
+    const message = this.notesService.remove(id);
+    return { message };
   }
 }
