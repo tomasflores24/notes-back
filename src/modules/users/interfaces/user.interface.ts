@@ -1,9 +1,8 @@
-import { UpdateResult } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from '../dto';
 
 export interface IUserService {
-  create(createUserDto: CreateUserDto): Promise<UserEntity>;
+  create(createUserDto: CreateUserDto): Promise<string>;
 
   findAll(): Promise<UserEntity[]>;
 
@@ -11,7 +10,7 @@ export interface IUserService {
 
   findBy(email: string): Promise<UserEntity>;
 
-  update(userId: string, updateUserDto: UpdateUserDto): Promise<UpdateResult>;
+  update(userId: string, updateUserDto: UpdateUserDto): Promise<string>;
 
-  remove(userId: string): Promise<UpdateResult>;
+  remove(userId: string): Promise<string>;
 }
