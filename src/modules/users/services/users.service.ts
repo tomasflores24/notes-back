@@ -28,8 +28,9 @@ export class UsersService implements IUserService {
         role: { id: roleId.BASIC },
       });
 
-      const userCreated = await this.userRepository.save(user);
-      return userCreated;
+      await this.userRepository.save(user);
+
+      return 'User created';
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
@@ -114,8 +115,7 @@ export class UsersService implements IUserService {
           message: 'Failed to update user',
         });
       }
-
-      return user;
+      return 'updated user';
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
@@ -137,8 +137,7 @@ export class UsersService implements IUserService {
           message: 'Could not be deleted',
         });
       }
-
-      return user;
+      return 'User deleted';
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }

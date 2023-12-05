@@ -21,8 +21,8 @@ export class NotesService implements INoteService {
         user: { id: createNoteDto.user },
         status: { id: statusId.ACTIVE },
       });
-      const noteCreated = await this.noteRepository.save(note);
-      return noteCreated;
+      await this.noteRepository.save(note);
+      return 'Note created';
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
@@ -85,10 +85,10 @@ export class NotesService implements INoteService {
       if (note.affected === 0) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se pudo actualizar',
+          message: 'Could not update',
         });
       }
-      return note;
+      return 'Updated note';
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
@@ -111,7 +111,7 @@ export class NotesService implements INoteService {
         });
       }
 
-      return note;
+      return 'Note deleted';
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
