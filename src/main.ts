@@ -17,7 +17,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
   const document = SwaggerModule.createDocument(app, configSwagger);
-  SwaggerModule.setup('doc', app, document);
+  SwaggerModule.setup('docs', app, document);
 
   const PORT = process.env.APP_PORT || 3000;
   await app.listen(PORT);
